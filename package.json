@@ -4,18 +4,23 @@
   "description": "node backend",
   "main": "app.js",
   "scripts": {
-    "test": "npm test"
+    "start": "node app.js",
+    "test": "npm test",
+    "dev": "nodemon app.js"
   },
   "keywords": [
     "koa",
-    "node"
+    "node",
+    "graphQL"
   ],
   "author": "David Ojimba <odave97@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "koa-http-request": "^2.2.1",
     "koa-plus": "^1.2.1",
-    "koa-router": "^7.4.0",
+    "koa-router": "^7.4.0"
+  },
+  "devDependencies": {
     "nodemon": "^1.19.1"
   }
 }
