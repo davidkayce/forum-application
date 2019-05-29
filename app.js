@@ -42,17 +42,6 @@ async function start () {
     timeout: 3000,    //3s timeout
   }));
 
-  // error handling
-  app.use(async (ctx, next) => {
-    try {
-      await next();
-    } catch (err) {
-      ctx.status = err.status || 500;
-      ctx.body = err.message;
-      ctx.app.emit('error', err, ctx);
-    }
-  });
-
   app.use(router.routes())
 
   app.listen (port, host)
