@@ -1,7 +1,6 @@
 const Koa = require('koa-plus')
 const router = require('./routes')
 const request = require('koa-http-request')
-const Gun = require('gun'); // added Gun DB 
 
 
 const app = new Koa({

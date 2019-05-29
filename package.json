@@ -13,7 +13,6 @@
   "author": "David Ojimba <odave97@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "gun": "^0.2019.515",
     "koa-http-request": "^2.2.1",
     "koa-plus": "^1.2.1",
     "koa-router": "^7.4.0",
