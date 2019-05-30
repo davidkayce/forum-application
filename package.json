@@ -1,5 +1,5 @@
 {
-  "name": "koa",
+  "name": "koajs-app",
   "version": "1.0.0",
   "description": "node backend",
   "main": "app.js",
@@ -17,9 +17,10 @@
   "license": "ISC",
   "dependencies": {
     "apollo-server-koa": "^2.5.0",
+    "axios": "^0.18.0",
     "graphql": "^14.3.1",
-    "koa-http-request": "^2.2.1",
-    "koa-plus": "^1.2.1",
+    "koa": "^2.7.0",
+    "koa-body": "^4.1.0",
     "koa-router": "^7.4.0"
   },
   "devDependencies": {

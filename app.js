@@ -1,24 +1,25 @@
-const Koa = require('koa-plus')
+const Koa = require('koa')
 const { ApolloServer } = require('apollo-server-koa') // Getting the apollo library for koa
-const request = require('koa-http-request') // Koa library for making http request on the server
+const bodyParser = require('koa-body')
 
-const config = require('./koa-config') // Koa-plus configurations
 const router = require('./routes') // Import routes folder 
+const logger = { log: e => console.log(e) } // Log errors from apollo
+
 const typeDefs = require('./graphQL/schema') // Import schema
 const resolvers = require('./graphQL/resolvers') // Import schema
  
 const server = new ApolloServer({ typeDefs, resolvers }) 
-const app = new Koa(config)
+const app = new Koa()
 
-server.applyMiddleware({ app }) // Wrap the koa server within the apollo server 
+server.applyMiddleware({ 
+  app, 
+  path: '/api',
+  introspection: true, }) // Wrap the koa server within the apollo server 
  
 async function start () {
   const port = process.env.PORT || 2400 // Set appropriate port based on env variables
 
-  app.use(request({ // koa request
-    json: true, //automatic parsing of JSON response
-    timeout: 3000,    //3s timeout
-  }));
+  app.use(bodyParser)
 
   app.use(router.routes()) // make use of exported routes in the route folder 
 
