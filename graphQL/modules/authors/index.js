@@ -1,5 +1,6 @@
+const { gql } = require('apollo-server-koa')
 
-export const authorTypes = gql`
+const authorTypes = gql`
   extend type Query {
     getAuthors: [Author]
     getAuthor(id: Int!): Author
@@ -16,3 +17,5 @@ export const authorTypes = gql`
     notes: [Note] # You use the schema to show relationship between different types eg here an author can have an array of notes
   }
 `
+
+module.exports = authorTypes 

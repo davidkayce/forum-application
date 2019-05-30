@@ -8,7 +8,7 @@ const logger = { log: e => console.log(e) } // Log errors from apollo
 const typeDefs = require('./graphQL/schema') // Import schema
 const resolvers = require('./graphQL/resolvers') // Import schema
  
-const server = new ApolloServer({ typeDefs, resolvers }) 
+const server = new ApolloServer({ typeDefs, resolvers, logger }) 
 const app = new Koa()
 
 server.applyMiddleware({ 

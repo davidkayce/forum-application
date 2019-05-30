@@ -1,11 +1,12 @@
+const { gql } = require('apollo-server-koa')
 
-export const noteTypes = gql`
-  extend type Query {
+const noteTypes = gql`
+  extend type Query { 
     getNotes: [Note], # This says we can query a defined object; Notes
     getSingleNote(id: Int!): Note
   }
 
-  type Subscription {
+  extend type Subscription {
     newNotes: [Note]!
   }
 
@@ -23,3 +24,5 @@ export const noteTypes = gql`
     content: String
   }
 `
+
+module.exports = noteTypes

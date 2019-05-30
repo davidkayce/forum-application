@@ -1,4 +1,4 @@
-export const authorResolver = {
+const resolvers = {
   Query: {
     getAuthors: () => 'You all wrote notes ?',
     getAuthor: () => 'You wrote a note ?'
@@ -8,3 +8,5 @@ export const authorResolver = {
     books: () => 'Want some books?',
   }
 }
+
+module.exports = resolvers
