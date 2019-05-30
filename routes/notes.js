@@ -2,6 +2,8 @@ const fs = require('fs')
 const Router = require('koa-router')
 const notes = new Router() // How to nest routes
 
+// REST APIs
+
 const loadNotes = () => {
   try {
     body = fs.readFileSync('notes.json').toString()
