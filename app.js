@@ -5,13 +5,7 @@ const request = require('koa-http-request') // Koa library for making http reque
 const config = require('./koa-config') // Koa-plus configurations
 const router = require('./routes') // Import routes folder 
 const typeDefs = require('./graphQL/schema') // Import schema
-
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
-}
+const resolvers = require('./graphQL/resolvers') // Import schema
  
 const server = new ApolloServer({ typeDefs, resolvers }) 
 const app = new Koa(config)
