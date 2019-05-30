@@ -4,7 +4,8 @@
 
 const resolvers = {
   Query: {
-    hello: () => 'Welcome mofo!!',
+    hello: () => 'Welcome mofo!!'
+    
   },
 }
 
