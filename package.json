@@ -16,6 +16,8 @@
   "author": "David Ojimba <odave97@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "apollo-server-koa": "^2.5.0",
+    "graphql": "^14.3.1",
     "koa-http-request": "^2.2.1",
     "koa-plus": "^1.2.1",
     "koa-router": "^7.4.0"

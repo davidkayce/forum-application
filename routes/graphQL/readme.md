@@ -1,0 +1,1 @@
+ Graph QL is just a specification on top of HTTP describing how resources should be shared and requested

@@ -1,8 +1,24 @@
 const Koa = require('koa-plus')
 const router = require('./routes')
 const request = require('koa-http-request')
+const { ApolloServer, gql } = require('apollo-server-koa')
 
-
+// Construct a schema, using GraphQL schema language
+const typeDefs = gql`
+  type Query {
+    hello: String
+  }
+`;
+ 
+// Provide resolver functions for your schema fields
+const resolvers = {
+  Query: {
+    hello: () => 'Hello world!',
+  },
+};
+ 
+const server = new ApolloServer({ typeDefs, resolvers });
+ 
 const app = new Koa({
   // Configuration for koa-plus
   body: {
@@ -31,8 +47,9 @@ const app = new Koa({
   }
 })
 
+server.applyMiddleware({ app });
+ 
 async function start () {
-  const host = process.env.HOST || '127.0.0.1'
   const port = process.env.PORT || 2400
 
   // koa request
@@ -43,8 +60,9 @@ async function start () {
 
   app.use(router.routes())
 
-  app.listen (port, host)
-  console.log(`Server is running on port: ` + port + ` and host: ` + host)
+  app.listen ({ port }, () => {
+    console.log(`🚀 Server ready at http://localhost:` + port + `${server.graphqlPath}`)
+  })
 }
 
 start() 
