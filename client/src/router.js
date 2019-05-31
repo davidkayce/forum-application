@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Rest from './views/rest'
 
 Vue.use(Router)
 
@@ -11,12 +11,12 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Rest
     },
     {
-      path: '/about',
-      name: 'about',
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      path: '/graph',
+      name: 'graph',
+      component: () => import(/* webpackChunkName: "about" */ './views/graphQL')
     }
   ]
 })
