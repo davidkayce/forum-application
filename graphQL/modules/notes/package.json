@@ -1,7 +1,7 @@
 {
-  "name": "notes-function",
+  "name": "posts-function",
   "version": "1.0.0",
-  "description": "function to work with notes and posts",
+  "description": "function to work with posts",
   "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
