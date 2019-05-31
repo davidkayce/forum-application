@@ -5,24 +5,20 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "npm test",
+    "test": 
     "dev": "nodemon app.js"
   },
   "keywords": [
     "koa",
-    "node",
-    "graphQL"
+    "node"
   ],
   "author": "David Ojimba <odave97@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "apollo-server-koa": "^2.5.0",
     "axios": "^0.18.0",
-    "graphql": "^14.3.1",
     "koa": "^2.7.0",
     "koa-body": "^4.1.0",
-    "koa-router": "^7.4.0",
-    "lodash": "^4.17.11"
+    "koa-router": "^7.4.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
