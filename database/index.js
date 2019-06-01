@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const connectionString = 
 
 mongoose.connect('mongodb+srv://dvaidkayce:nwokeobioma@koaapp-0bdt0.azure.mongodb.net/test?retryWrites=true&w=majority', {
     useNewUrlParser: true,
@@ -7,3 +6,8 @@ mongoose.connect('mongodb+srv://dvaidkayce:nwokeobioma@koaapp-0bdt0.azure.mongod
     useFindAndModify: false
 })
 
+mongoose.connection.once('open', () => {
+    console.log('Database connected')
+}).on('error', (error) => {
+    console.log('Connection error: ', error)
+})
