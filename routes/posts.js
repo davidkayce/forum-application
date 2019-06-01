@@ -12,7 +12,6 @@ posts.get('/posts', async ctx => {
   }
 })
 
-
 posts.get('/posts/:id', async ctx => {
   const _id = ctx.params.id
 
@@ -30,7 +29,6 @@ posts.get('/posts/:id', async ctx => {
   }
 })
 
-
 posts.post('/posts', async ctx => {
   const post = new Post(ctx.request.body)
 
@@ -43,7 +41,6 @@ posts.post('/posts', async ctx => {
     ctx.body = e
   }
 })
-
 
 posts.patch('/posts/:id', async ctx => {
   const updates = Object.keys(ctx.request.body)
@@ -69,7 +66,6 @@ posts.patch('/posts/:id', async ctx => {
     ctx.body = e
   }
 })
-
 
 posts.delete('/posts/:id', async ctx => {
   try {
