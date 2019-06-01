@@ -2,7 +2,7 @@ const fs = require('fs')
 const Router = require('koa-router')
 const notes = new Router() // How to nest routes
 
-// REST APIs
+// REST APIs ( without DB, just reading from a file )
 
 const loadNotes = () => {
   try {

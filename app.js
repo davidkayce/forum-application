@@ -1,5 +1,6 @@
 const Koa = require('koa')
 const bodyParser = require('koa-body')
+// require('./database')
 
 const router = require('./routes') // Import routes folder 
 const app = new Koa()

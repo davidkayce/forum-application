@@ -1,9 +1,14 @@
 const Router = require('koa-router')
 const router = new Router() // Base router
+
 const notes = require('./notes')
+const posts = require('./posts')
+const users = require('./users')
 
 
 router.use('/api/notes', notes.routes()) // How to nest routes
+router.use('/api/posts', posts.routes()) 
+router.use('/api/users', users.routes()) 
 
 router.get('*', async ctx => { // Wildcard catcher (this MUST always be the LAST)
   ctx.body = 'You have requested a wrong route, please check properly'

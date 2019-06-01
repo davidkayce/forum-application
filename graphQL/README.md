@@ -4,7 +4,12 @@ Here we would try to build serverless apollo apis using the follogin frameworks:
 2. Zeit.co's Now V2 ( main value proposition here is that they can cache responses so you reduce function call ups )
 
 ## Architecture and Features
-1. I would be using GUN DB as the main storage layer. GUN DB is a javascript only graph database 
+1. We will be using a serverless architecture with APIs being run as functions
+2. I would be using GUN DB as the main storage layer. GUN DB is a decentralised javascript only graph database that guarantees eventual consistency across all database peers 
+3. Most function actions will be mutations as the query of information will be done through GUN DB on the client side
+4. Each function is to write to its own peer of the DB with specific credentials
+5. Data sharing and realtime updates are done on the DB layer
+6. Before a function is closed, it needs to confirm that the data has been updated on the DB super-peer
 
 
 ### Best Practises
