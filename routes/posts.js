@@ -20,7 +20,8 @@ posts.get('/posts/:id', async ctx => {
     const post = await Post.findById(_id)
 
     if (!post) {
-      return ctx.status(404).body()
+      ctx.status = 404
+      ctx.body = {msg:'emmmmmmm, seems 404'};
     }
 
     res.send(post)
@@ -44,40 +45,44 @@ posts.post('/posts', async ctx => {
 })
 
 
-posts.patch('/posts/:id', async (req, res) => {
-  const updates = Object.keys(req.body)
+posts.patch('/posts/:id', async ctx => {
+  const updates = Object.keys(ctx.request.body)
   const allowedUpdates = ['description', 'completed']
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
   if (!isValidOperation) {
-    return res.status(400).send({ error: 'Invalid updates!' })
+    ctx.status = 400
+    ctx.body = {msg:'Invalid updates'}
   }
 
   try {
-    const post = await post.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    const post = await post.findByIdAndUpdate(ctx.request.params.id, ctx.request.body, { new: true, runValidators: true })
 
     if (!post) {
-      return res.status(404).send()
+      ctx.status = 404
+      ctx.body = {msg:'emmmmmmm, seems 404'}
     }
 
-    res.send(post)
+    ctx.body = post
   } catch (e) {
-    res.status(400).send(e)
+    ctx.status = 400
+    ctx.body = e
   }
 })
 
 
-posts.delete('/posts/:id', async (req, res) => {
+posts.delete('/posts/:id', async ctx => {
   try {
-    const post = await post.findByIdAndDelete(req.params.id)
+    const post = await post.findByIdAndDelete(ctx.request.params.id)
 
     if (!post) {
-      res.status(404).send()
+      ctx.status = 404
+      ctx.body = {msg:'emmmmmmm, seems 404'}
     }
-
-    res.send(post)
+    ctx.body = post
   } catch (e) {
-    res.status(500).send()
+    ctx.status = 404
+    ctx.body = {msg:'Internal Server Error'}
   }
 })
 
