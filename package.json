@@ -15,9 +15,9 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
+    "dotenv": "^8.0.0",
     "koa-plus": "^1.2.1",
     "koa-router": "^7.4.0",
-    "mongodb": "^3.2.6",
     "mongoose": "^5.5.12"
   },
   "devDependencies": {
