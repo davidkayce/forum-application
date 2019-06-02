@@ -31,10 +31,8 @@ const app = new Koa({
   }
 })
 
-const db = mongoose.connect('mongodb+srv://dvaidkayce:nwokeobioma@koaapp-0bdt0.azure.mongodb.net/test?retryWrites=true&w=majority',
-  { dbName: 'KoaApp' },
-  { useNewUrlParser: true })
-  .then(() => console.log('DB connected'))
+mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true})
+  .then(() => console.log('🥁 DB connected'))
   .catch((err) => console.error(err))
 
 async function start () {
