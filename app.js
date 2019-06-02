@@ -1,6 +1,6 @@
 const Koa = require('koa-plus')
 const mongoose = require('mongoose')
-require('dotenv').config({ path:'variables.env' })
+require('dotenv').config({ path:'variables.env'})
 
 const router = require('./routes') // Import routes folder 
 
