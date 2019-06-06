@@ -5,33 +5,30 @@ const Post = require('../models/posts')
 posts.get('/posts', async ctx => {
   try {
     const posts = await Post.find({})
-    ctx.status = 200
     ctx.body = posts
   } catch (e) {
     ctx.status = 500
+    ctx.body = 'Internal server error'
   }
 })
 
 posts.get('/posts/:id', async ctx => {
   const _id = ctx.params.id
-
   try {
     const post = await Post.findById(_id)
-
     if (!post) {
       ctx.status = 404
       ctx.body = {msg:'emmmmmmm, seems 404'};
     }
-
-    res.send(post)
+    ctx.body = post
   } catch (e) {
-    res.status(500).send()
+    ctx.status = 500
+    ctx.body = 'Internal server error'
   }
 })
 
 posts.post('/posts', async ctx => {
   const post = new Post(ctx.request.body)
-
   try {
     await post.save()
     ctx.status = 201
@@ -54,12 +51,10 @@ posts.patch('/posts/:id', async ctx => {
 
   try {
     const post = await post.findByIdAndUpdate(ctx.request.params.id, ctx.request.body, { new: true, runValidators: true })
-
     if (!post) {
       ctx.status = 404
       ctx.body = {msg:'emmmmmmm, seems 404'}
     }
-
     ctx.body = post
   } catch (e) {
     ctx.status = 400
@@ -70,7 +65,6 @@ posts.patch('/posts/:id', async ctx => {
 posts.delete('/posts/:id', async ctx => {
   try {
     const post = await post.findByIdAndDelete(ctx.request.params.id)
-
     if (!post) {
       ctx.status = 404
       ctx.body = {msg:'emmmmmmm, seems 404'}
