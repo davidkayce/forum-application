@@ -1,7 +1,8 @@
 const Router = require('koa-router')
+const User = require('../models/user')
 const user = new Router() // How to nest routes
 
-user.get('/users', async ctx => {
+user.get('/', async ctx => {
   try {
     const users = await User.find({})
     ctx.body = users
@@ -11,7 +12,7 @@ user.get('/users', async ctx => {
   }
 })
 
-user.get('/users/:id', async ctx => {
+user.get('/:id', async ctx => {
   const _id = ctx.params.id
   try {
     const user = await User.findById(_id)
@@ -38,7 +39,7 @@ user.post('/', async ctx => {
   }
 })
 
-user.patch('/users/:id', async ctx => {
+user.patch('/:id', async ctx => {
   const updates = Object.keys(ctx.request.body)
   const allowedUpdates = ['name', 'email', 'password', 'age']
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -48,11 +49,15 @@ user.patch('/users/:id', async ctx => {
     ctx.body = 'Invalid updates'
   }
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    const user = await User.findById(ctx.request.params.id)
+    updates.forEach((update) => user[update] = ctx.request.body[update])
+    await user.save()
+
     if (!user) {
       ctx.status = 404
       ctx.body = 'emmmmm, seems this user does not exist'
     }
+
     ctx.body = user
   } catch (e) {
     ctx.status = 400
@@ -60,9 +65,9 @@ user.patch('/users/:id', async ctx => {
   }
 })
 
-user.delete('/users/:id', async ctx => {
+user.delete('/:id', async ctx => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id)
+    const user = await User.findByIdAndDelete(ctx.request.params.id)
     if (!user) {
       ctx.status = 404
       ctx.body = 'emmmmm, seems this user does not exist'

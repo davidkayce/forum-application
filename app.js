@@ -31,7 +31,10 @@ const app = new Koa({
   }
 })
 
-mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true})
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false })
   .then(() => console.log('🥁 DB connected'))
   .catch((err) => console.error(err))
 
