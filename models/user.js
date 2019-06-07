@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 
 // Create a schema of sort that defines different values and their conditons 
 const userSchema = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
     // required: true,
     trim: true
