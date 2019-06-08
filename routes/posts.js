@@ -16,7 +16,7 @@ posts.get('/', auth, async ctx => {
 posts.get('/:id', auth, async ctx => {
   const _id = ctx.params.id
   try {
-    const post = await Post.findById(_id)
+    const post = await Post.findOne({_id, author: ctx.request.user._id}) // Filter posts gotten according to user
     if (!post) {
       ctx.status = 404
       ctx.body = {msg:'emmmmmmm, seems 404'};
@@ -29,13 +29,13 @@ posts.get('/:id', auth, async ctx => {
 })
 
 posts.post('/', auth, async ctx => {
-  console.log(ctx.request.body)
   const post = new Post({
     ...ctx.request.body,
     author: ctx.request.user._id
   })
   try {
     await post.save()
+    console.log('I saved')
     ctx.status = 201
     ctx.body = post
   } catch (e) {

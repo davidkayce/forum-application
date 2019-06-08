@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 // Create a schema of sort that defines different values and their conditons 
-const Post = mongoose.model('Task', {
+const Post = mongoose.model('Post', {
   title: {
     type: String,
     required: true,
@@ -16,10 +16,10 @@ const Post = mongoose.model('Task', {
   content: {
     type: String,
     required: true,
-  } 
-  // likes: {
-  //   type: Number
-  // }
+  }, 
+  likes: {
+    type: Number
+  }
 })
 
 module.exports = Post
