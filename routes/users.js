@@ -1,8 +1,9 @@
 const Router = require('koa-router')
 const User = require('../models/user')
+const auth = require('../middleware/auth')
 const user = new Router() // How to nest routes
 
-user.get('/', async ctx => {
+user.get('/', auth, async ctx => {
   try {
     const users = await User.find({})
     ctx.body = users
@@ -12,7 +13,7 @@ user.get('/', async ctx => {
   }
 })
 
-user.get('/:id', async ctx => {
+user.get('/:id', auth, async ctx => {
   const _id = ctx.params.id
   try {
     const user = await User.findById(_id)
@@ -27,7 +28,7 @@ user.get('/:id', async ctx => {
   }
 })
 
-user.patch('/:id', async ctx => {
+user.patch('/:id', auth, async ctx => {
   const updates = Object.keys(ctx.request.body)
   const allowedUpdates = ['username', 'email', 'password', 'age'] 
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update)) // sets validation rule for what can be edited in a user
@@ -54,7 +55,7 @@ user.patch('/:id', async ctx => {
   }
 })
 
-user.delete('/:id', async ctx => {
+user.delete('/:id', auth, async ctx => {
   try {
     const user = await User.findByIdAndDelete(ctx.request.params.id)
     if (!user) {

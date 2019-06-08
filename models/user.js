@@ -41,7 +41,13 @@ const userSchema = new mongoose.Schema({
         throw new Error('You are not old enough to use this app')
       }
     }
-  }
+  },
+  tokens: [{
+    token: {
+      type: String,
+      required: true
+    }
+  }]
 })
 
 // Encryption middleware placed before each save
@@ -55,7 +61,6 @@ userSchema.pre('save', async function (next) { // we did not use an arrow functi
 
 
 // Authentication Middleware through custom function 'createCredentials'
-// npm i jsonwebtoken@latest
 userSchema.statics.checkCredentials = async (email, password) => {
   const user = await User.findOne({ email })
   if (!user) {
@@ -65,8 +70,22 @@ userSchema.statics.checkCredentials = async (email, password) => {
   if (!isMatch) {
     throw new Error('The supplied credentials are incorrect')
   }
-  const token = jwt.sign({user._id }, 'secret')
   return user
+}
+
+// API token authentication
+userSchema.methods.generateToken = async function () {
+  const user = this
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.API_PRIVATE)
+  user.tokens = user.tokens.concat({ token }) // Store token in array of whitelisted tokens
+  await user.save()
+  return token
+}
+
+userSchema.methods.verifyToken = async function () {
+  const user = this
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.API_PRIVATE)
+  return token
 }
 
 const User = mongoose.model('User', userSchema)

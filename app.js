@@ -40,6 +40,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 async function start () {
   const port = process.env.PORT || 2400 // Set appropriate port based on env variables
+
   app.use(router.routes()) // make use of exported routes in the route folder 
 
   app.listen ({ port }, () => {

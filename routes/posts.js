@@ -1,8 +1,9 @@
 const Router = require('koa-router')
 const Post = require('../models/posts')
+const auth = require('../middleware/auth')
 const posts = new Router() // How to nest routes
 
-posts.get('/', async ctx => {
+posts.get('/', auth, async ctx => {
   try {
     const posts = await Post.find({})
     ctx.body = posts
@@ -12,7 +13,7 @@ posts.get('/', async ctx => {
   }
 })
 
-posts.get('/:id', async ctx => {
+posts.get('/:id', auth, async ctx => {
   const _id = ctx.params.id
   try {
     const post = await Post.findById(_id)
@@ -27,7 +28,7 @@ posts.get('/:id', async ctx => {
   }
 })
 
-posts.post('/', async ctx => {
+posts.post('/', auth, async ctx => {
   const post = new Post(ctx.request.body)
   try {
     await post.save()
@@ -39,7 +40,7 @@ posts.post('/', async ctx => {
   }
 })
 
-posts.patch('/:id', async ctx => {
+posts.patch('/:id', auth, async ctx => {
   const updates = Object.keys(ctx.request.body)
   const allowedUpdates = ['title', 'content']
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update)) // sets validation rule for what can be edited in a post
@@ -65,7 +66,7 @@ posts.patch('/:id', async ctx => {
   }
 })
 
-posts.delete('/:id', async ctx => {
+posts.delete('/:id', auth, async ctx => {
   try {
     const post = await Post.findByIdAndDelete(ctx.request.params.id)
     if (!post) {

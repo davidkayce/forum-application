@@ -17,7 +17,8 @@ auth.post('/signup', async ctx => {
 auth.post('/login', async ctx => {
   try {
     const user = await User.checkCredentials(ctx.request.body.email, ctx.request.body.password)
-    ctx.body = user
+    const token = await user.generateToken()
+    ctx.body = { user, token }
   } catch (err) {
     ctx.status = 400
     ctx.body = 'The supplied credentials are incorrect'
