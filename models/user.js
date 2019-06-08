@@ -59,7 +59,6 @@ userSchema.pre('save', async function (next) { // we did not use an arrow functi
   next()
 })
 
-
 // Authentication Middleware through custom function 'createCredentials'
 userSchema.statics.checkCredentials = async (email, password) => {
   const user = await User.findOne({ email })
@@ -79,12 +78,6 @@ userSchema.methods.generateToken = async function () {
   const token = jwt.sign({ _id: user._id.toString() }, process.env.API_PRIVATE)
   user.tokens = user.tokens.concat({ token }) // Store token in array of whitelisted tokens
   await user.save()
-  return token
-}
-
-userSchema.methods.verifyToken = async function () {
-  const user = this
-  const token = jwt.sign({ _id: user._id.toString() }, process.env.API_PRIVATE)
   return token
 }
 

@@ -1,27 +1,11 @@
 const Router = require('koa-router')
-const User = require('../models/user')
 const auth = require('../middleware/auth')
+const User = require('../models/user')
 const user = new Router() // How to nest routes
 
 user.get('/', auth, async ctx => {
   try {
-    const users = await User.find({})
-    ctx.body = users
-  } catch (e) {
-    ctx.status = 500
-    ctx.body = 'Internal server error'
-  }
-})
-
-user.get('/:id', auth, async ctx => {
-  const _id = ctx.params.id
-  try {
-    const user = await User.findById(_id)
-    if (!user) {
-      ctx.status = 404
-      ctx.body = {msg:'emmmmmmm, seems 404'};
-    }
-    ctx.body = user
+    ctx.body = ctx.request.user
   } catch (e) {
     ctx.status = 500
     ctx.body = 'Internal server error'
