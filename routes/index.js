@@ -7,10 +7,10 @@ const users = require('./users')
 const auth = require('./auth')
 
 
-router.use('/api/notes', notes.routes()) // How to nest routes
-router.use('/api/posts', posts.routes()) 
-router.use('/api/users', users.routes()) 
-router.use('/api/auth', auth.routes()) 
+router.use('/notes', notes.routes()) // How to nest routes
+router.use('/posts', posts.routes()) 
+router.use('/users', users.routes()) 
+router.use('/auth', auth.routes()) 
 
 router.get('*', async ctx => { // Wildcard catcher (this MUST always be the LAST)
   ctx.body = 'You have requested a wrong route, please check properly'
