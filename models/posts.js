@@ -10,15 +10,16 @@ const Post = mongoose.model('Task', {
   },
   author: { //Setting post-user relationship
     type: mongoose.Schema.Types.ObjectId,
-    required: true
+    required: true,
+    ref: 'User'
   },
   content: {
     type: String,
     required: true,
-  }, 
-  likes: {
-    type: Number
-  }
+  } 
+  // likes: {
+  //   type: Number
+  // }
 })
 
 module.exports = Post

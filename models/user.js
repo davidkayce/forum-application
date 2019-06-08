@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken')
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    // required: true,
+    required: true,
     trim: true
   },
   email: {
@@ -48,6 +48,12 @@ const userSchema = new mongoose.Schema({
       required: true
     }
   }]
+})
+
+userSchema.virtual('posts', {
+  ref: 'Post', // Setting up relationship
+  localField: '_id', // where is the reference stored on the other side?
+  foreignField: 'author' // what is the name of the reference on the other side?
 })
 
 // Encryption middleware placed before each save

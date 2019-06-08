@@ -29,13 +29,17 @@ posts.get('/:id', auth, async ctx => {
 })
 
 posts.post('/', auth, async ctx => {
-  const post = new Post(ctx.request.body)
+  console.log(ctx.request.body)
+  const post = new Post({
+    ...ctx.request.body,
+    author: ctx.request.user._id
+  })
   try {
     await post.save()
     ctx.status = 201
     ctx.body = post
   } catch (e) {
-    ctx.status = 201
+    ctx.status = 400
     ctx.body = e
   }
 })
