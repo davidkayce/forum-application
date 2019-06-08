@@ -81,6 +81,10 @@ userSchema.methods.generateToken = async function () {
   return token
 }
 
+userSchema.methods.getPublic = async function () {
+
+}
+
 const User = mongoose.model('User', userSchema)
 
 module.exports = User

@@ -1,5 +1,6 @@
 const Router = require('koa-router')
 const User = require('../models/user')
+const authn = require('../middleware/auth')
 const auth = new Router()
 
 auth.post('/signup', async ctx => {
@@ -18,15 +19,34 @@ auth.post('/login', async ctx => {
   try {
     const user = await User.checkCredentials(ctx.request.body.email, ctx.request.body.password)
     const token = await user.generateToken()
-    ctx.body = { user, token }
+    ctx.body = { user: user.getPublic(), token }
   } catch (err) {
     ctx.status = 400
     ctx.body = 'The supplied credentials are incorrect'
   }
 })
 
-auth.post('/logout', async ctx => {
-
+auth.get('/logout', authn,  async ctx => { // We want to make sure you are logged in to be able to logout
+  try {
+    ctx.request.user.tokens = ctx.request.user.tokens.filter((token) => {
+      return token.token !== ctx.request.token
+    })
+    await ctx.request.user.save() // Save only the tokens that do not match the current one, basically deleting the token
+    ctx.status = 200
+  } catch (error) {
+    ctx.status = 500
+  }
 })
+
+auth.get('/logout-all', authn,  async ctx => { 
+  try {
+    ctx.request.user.tokens = [] // Set all tokens to empty array , basically wiping everything
+    await ctx.request.user.save() 
+    ctx.status = 200
+  } catch (error) {
+    ctx.status = 500
+  }
+})
+
 
 module.exports = auth
