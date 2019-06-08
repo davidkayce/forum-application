@@ -3,7 +3,7 @@ const Post = require('../models/posts')
 const auth = require('../middleware/auth')
 const posts = new Router() // How to nest routes
 
-posts.get('/', auth, async ctx => {
+posts.get('/all', auth, async ctx => { // Get all posts even those that aren't yours
   try {
     const posts = await Post.find({})
     ctx.body = posts
@@ -13,10 +13,19 @@ posts.get('/', auth, async ctx => {
   }
 })
 
-posts.get('/:id', auth, async ctx => {
-  const _id = ctx.params.id
+posts.get('/', auth, async ctx => {
   try {
-    const post = await Post.findOne({_id, author: ctx.request.user._id}) // Filter posts gotten according to user
+    const posts = await Post.find({ author: ctx.request.user._id })
+    ctx.body = posts
+  } catch (e) {
+    ctx.status = 500
+    ctx.body = 'Internal server error'
+  }
+})
+
+posts.get('/:id', auth, async ctx => {
+  try {
+    const post = await Post.findOne({ _id: ctx.params.id, author: ctx.request.user._id }) // Filter posts gotten according to user
     if (!post) {
       ctx.status = 404
       ctx.body = {msg:'emmmmmmm, seems 404'};
@@ -55,14 +64,15 @@ posts.patch('/:id', auth, async ctx => {
   }
 
   try {
-    const post = await Post.findById(ctx.request.params.id)
-    updates.forEach((update) => post[update] = ctx.request.body[update])
-    await post.save()
-
+    const post = await Post.findOne({ _id: ctx.params.id, author: ctx.request.user._id })
+    
     if (!post) {
       ctx.status = 404
       ctx.body = {msg:'emmmmmmm, seems 404'}
     }
+
+    updates.forEach((update) => post[update] = ctx.request.body[update])
+    await post.save()
     ctx.body = post
   } catch (e) {
     ctx.status = 400
@@ -72,7 +82,7 @@ posts.patch('/:id', auth, async ctx => {
 
 posts.delete('/:id', auth, async ctx => {
   try {
-    const post = await Post.findByIdAndDelete(ctx.request.params.id)
+    const post = await Post.findOneAndDelete({ _id: ctx.params.id, author: ctx.request.user._id })
     if (!post) {
       ctx.status = 404
       ctx.body = {msg:'emmmmmmm, seems 404'}
