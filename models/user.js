@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const Post = require('./posts')
 
 // Create a schema of sort that defines different values and their conditons 
 const userSchema = new mongoose.Schema({
@@ -90,6 +91,13 @@ userSchema.methods.toJSON = function () {
 
   return userObject
 }
+
+// Delete user posts when user is deleted
+userSchema.pre('remove', async function (next) {
+  const user = this
+  await Post.deleteMany({ author: user._id })
+  next()
+})
 
 const User = mongoose.model('User', userSchema)
 
