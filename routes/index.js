@@ -9,7 +9,7 @@ const auth = require('./auth')
 
 router.use('/notes', notes.routes()) // How to nest routes
 router.use('/posts', posts.routes()) 
-router.use('/user', user.routes()) 
+router.use('/profile', user.routes()) 
 router.use('/auth', auth.routes()) 
 
 router.get('*', async ctx => { // Wildcard catcher (this MUST always be the LAST)

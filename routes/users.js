@@ -12,34 +12,26 @@ user.get('/', auth, async ctx => {
   }
 })
 
-user.patch('/:id', auth, async ctx => {
+user.patch('/', auth, async ctx => {
   const updates = Object.keys(ctx.request.body)
   const allowedUpdates = ['username', 'email', 'password', 'age'] 
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update)) // sets validation rule for what can be edited in a user
-
 
   if (!isValidOperation) {
     ctx.status = 404
     ctx.body = 'Invalid updates'
   }
   try {
-    const user = await User.findById(ctx.request.params.id) // The reason we go through this instead of just findAndUpdate is to allow the encryption middleware work on updating passwords
-    updates.forEach((update) => user[update] = ctx.request.body[update])
-    await user.save()
-
-    if (!user) {
-      ctx.status = 404
-      ctx.body = 'emmmmm, seems this user does not exist'
-    }
-
-    ctx.body = user
+    updates.forEach((update) => ctx.request.user[update] = ctx.request.body[update]) // Since we have the stored user
+    await ctx.request.user.save()
+    ctx.body = ctx.request.user
   } catch (e) {
     ctx.status = 400
     ctx.body = e
   }
 })
 
-user.delete('/:id', auth, async ctx => {
+user.delete('/', auth, async ctx => {
   try {
     const user = await User.findByIdAndDelete(ctx.request.params.id)
     if (!user) {

@@ -8,14 +8,16 @@ const Post = mongoose.model('Task', {
     minlength: 7,
     trim: true
   },
-  author: {
-    type: String,
-    required: true,
-    trim: true
+  author: { //Setting post-user relationship
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
   },
   content: {
     type: String,
     required: true,
+  }, 
+  likes: {
+    type: Number
   }
 })
 
