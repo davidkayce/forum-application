@@ -27,29 +27,18 @@ user.get('/:id', async ctx => {
   }
 })
 
-user.post('/', async ctx => {
-  const user = new User(ctx.request.body)
-  try {
-    await user.save()
-    ctx.status = 201
-    ctx.body = user
-  } catch (e) {
-    ctx.status = 400
-    ctx.body = e
-  }
-})
-
 user.patch('/:id', async ctx => {
   const updates = Object.keys(ctx.request.body)
-  const allowedUpdates = ['name', 'email', 'password', 'age']
-  const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+  const allowedUpdates = ['username', 'email', 'password', 'age'] 
+  const isValidOperation = updates.every((update) => allowedUpdates.includes(update)) // sets validation rule for what can be edited in a user
+
 
   if (!isValidOperation) {
     ctx.status = 404
     ctx.body = 'Invalid updates'
   }
   try {
-    const user = await User.findById(ctx.request.params.id)
+    const user = await User.findById(ctx.request.params.id) // The reason we go through this instead of just findAndUpdate is to allow the encryption middleware work on updating passwords
     updates.forEach((update) => user[update] = ctx.request.body[update])
     await user.save()
 

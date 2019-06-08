@@ -17,6 +17,7 @@
     "axios": "^0.19.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.0.0",
+    "jsonwebtoken": "^8.5.1",
     "koa-plus": "^1.2.1",
     "koa-router": "^7.4.0",
     "mongoose": "^5.5.12",

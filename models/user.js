@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 // Create a schema of sort that defines different values and their conditons 
 const userSchema = new mongoose.Schema({
@@ -11,6 +12,7 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
+    unique: true,
     required: true,
     trim: true,
     lowercase: true,
@@ -42,19 +44,30 @@ const userSchema = new mongoose.Schema({
   }
 })
 
-// Setting up authentication
-// First npm install bcryptjs ( this makes use of hashing algorithms to protect the passwords before they are saved to the DB)
-// Key functions are bcrypt.hash({plain password},{number of rounds}) and bcrypt.compare({plain password}, {stored password})
-
-// We set up a middleware for each user before being save
+// Encryption middleware placed before each save
 userSchema.pre('save', async function (next) { // we did not use an arrow function hereause we want to access the "this" property
   const user = this
   if (user.isModified('password')) { // this checks if the user password property is being changed 
     user.password = await bcrypt.hash(user.password, 10)
   }
-  
   next()
 })
+
+
+// Authentication Middleware through custom function 'createCredentials'
+// npm i jsonwebtoken@latest
+userSchema.statics.checkCredentials = async (email, password) => {
+  const user = await User.findOne({ email })
+  if (!user) {
+    throw new Error('This user does not exist')
+  }
+  const isMatch = await bcrypt.compare(password, user.password)
+  if (!isMatch) {
+    throw new Error('The supplied credentials are incorrect')
+  }
+  const token = jwt.sign({user._id }, 'secret')
+  return user
+}
 
 const User = mongoose.model('User', userSchema)
 

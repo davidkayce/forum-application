@@ -41,8 +41,8 @@ posts.post('/', async ctx => {
 
 posts.patch('/:id', async ctx => {
   const updates = Object.keys(ctx.request.body)
-  const allowedUpdates = ['description', 'completed']
-  const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+  const allowedUpdates = ['title', 'content']
+  const isValidOperation = updates.every((update) => allowedUpdates.includes(update)) // sets validation rule for what can be edited in a post
 
   if (!isValidOperation) {
     ctx.status = 400
@@ -50,7 +50,10 @@ posts.patch('/:id', async ctx => {
   }
 
   try {
-    const post = await post.findByIdAndUpdate(ctx.request.params.id, ctx.request.body, { new: true, runValidators: true })
+    const post = await Post.findById(ctx.request.params.id)
+    updates.forEach((update) => post[update] = ctx.request.body[update])
+    await post.save()
+
     if (!post) {
       ctx.status = 404
       ctx.body = {msg:'emmmmmmm, seems 404'}
@@ -64,7 +67,7 @@ posts.patch('/:id', async ctx => {
 
 posts.delete('/:id', async ctx => {
   try {
-    const post = await post.findByIdAndDelete(ctx.request.params.id)
+    const post = await Post.findByIdAndDelete(ctx.request.params.id)
     if (!post) {
       ctx.status = 404
       ctx.body = {msg:'emmmmmmm, seems 404'}
