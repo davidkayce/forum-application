@@ -8,10 +8,9 @@ const Post = mongoose.model('Post', {
     minlength: 7,
     trim: true
   },
-  author: { //Setting post-user relationship
-    type: mongoose.Schema.Types.ObjectId,
+  author: { 
+    type: String,
     required: true,
-    ref: 'User'
   },
   content: {
     type: String,

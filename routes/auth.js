@@ -17,12 +17,30 @@ auth.post('/signup', async ctx => {
 
 auth.post('/login', async ctx => {
   try {
-    const user = await User.checkCredentials(ctx.request.body.email, ctx.request.body.password)
-    const token = await user.generateToken()
-    ctx.body = { user, token }
+    let user = await User.checkCredentials(ctx.request.body.email, ctx.request.body.password)
+    let token = user.generateToken()
+    let refreshToken = user.refreshToken()
+    ctx.body = { user, token, refreshToken }
   } catch (err) {
     ctx.status = 400
     ctx.body = 'The supplied credentials are incorrect'
+  }
+})
+
+auth.post('/refresh', async ctx => {
+  try {
+    const token = ctx.request.body.token
+    const decoded = jwt.verify(token, process.env.API_REFRESH)
+    const user = await User.findOne({ _id: decoded._id, 'tokens.token': token }) // check for a user with the id in the JWT and the right token
+
+    if (!user) {
+      throw new Error()
+    }
+    let newToken = user.generateToken()
+    ctx.body = newToken
+  } catch (err) {
+    ctx.status = 400
+    ctx.body = 'The supplied token is invalid'
   }
 })
 

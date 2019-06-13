@@ -3,7 +3,6 @@ const User = require('../models/user')
 
 const auth = async (ctx, next) => {
   try {
-    // TODO:  add timing to delet tokens that have passed time
     const token = ctx.request.header['authorization'].replace('Bearer ', '')
     const decoded = jwt.verify(token, process.env.API_PRIVATE)
     const user = await User.findOne({ _id: decoded._id, 'tokens.token': token }) // check for a user with the id in the JWT and the right token

@@ -76,10 +76,19 @@ userSchema.statics.checkCredentials = async (email, password) => {
 // API token authentication
 userSchema.methods.generateToken = async function () {
   const user = this
-  const token = jwt.sign({ _id: user._id.toString() }, process.env.API_PRIVATE)
-  user.tokens = user.tokens.concat({ token }) // Store token in array of whitelisted tokens
+  // Generate user token and set expiry
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.API_PRIVATE, { expiresIn: process.env.API_LIFETIME })
+  user.tokens = user.tokens.concat({ token }) 
   await user.save()
   return token
+}
+
+userSchema.methods.refreshToken = async function () {
+  const user = this
+  // Generate refresh tokens and set expiry
+  // This is used in webapps to always keep the user logged in
+  const refreshToken = jwt.sign({ _id: user._id.toString() }, process.env.API_REFRESH, { expiresIn: process.env.REFRESH_LIFETIME }) 
+  return refreshToken
 }
 
 userSchema.methods.toJSON = function () {
