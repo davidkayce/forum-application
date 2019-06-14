@@ -9,7 +9,8 @@ const Post = mongoose.model('Post', {
     trim: true
   },
   author: { 
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
     required: true,
   },
   content: {

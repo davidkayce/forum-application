@@ -5,7 +5,7 @@ const posts = new Router() // How to nest routes
 
 posts.get('/all', auth, async ctx => { // Get all posts even those that aren't yours
   try {
-    const posts = await Post.find({})
+    const posts = await Post.find({}).populate('user').exec()
     ctx.body = posts
   } catch (e) {
     ctx.status = 500
@@ -15,7 +15,7 @@ posts.get('/all', auth, async ctx => { // Get all posts even those that aren't y
 
 posts.get('/', auth, async ctx => {
   try {
-    const posts = await Post.find({ author: ctx.request.user._id })
+    const posts = await Post.find({ author: ctx.request.user._id }).populate('user').exec()
     ctx.body = posts
   } catch (e) {
     ctx.status = 500
