@@ -17,7 +17,10 @@ posts.get('/all', auth, async ctx => {
       match,
       options: {
         limit: parseInt(ctx.request.query.limit) || 15, // Limit of posts to send
-        skip: parseInt(ctx.request.query.skip) || 0 // Skip * number of entries
+        skip: parseInt(ctx.request.query.skip) || 0, // Skip * number of entries
+        sort: {
+          createdAt: -1 // descending ie newest first
+        }
       }
     })
     ctx.body = posts
@@ -41,7 +44,10 @@ posts.get('/', auth, async ctx => {
       match,
       options: {
         limit: parseInt(ctx.request.query.limit) || 10,
-        skip: parseInt(ctx.request.query.skip) || 0 // Skip * number of entries
+        skip: parseInt(ctx.request.query.skip) || 0, // Skip * number of entries
+        sort: {
+          createdAt: -1 // descending ie newest first
+        }
       }
     }).execPopulate()
     ctx.body = ctx.request.user.posts
