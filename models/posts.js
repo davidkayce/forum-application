@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 // Create a schema of sort that defines different values and their conditons 
-const Post = mongoose.model('Post', {
+const postSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -20,6 +20,10 @@ const Post = mongoose.model('Post', {
     ref: 'User',
     required: true,
   }
+}, {
+  timestamps: true
 })
+
+const Post = mongoose.model('Post', postSchema)
 
 module.exports = Post
