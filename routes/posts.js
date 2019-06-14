@@ -5,7 +5,7 @@ const posts = new Router() // How to nest routes
 
 posts.get('/all', auth, async ctx => { // Get all posts even those that aren't yours
   try {
-    const posts = await Post.find({}).populate('user').exec()
+    const posts = await Post.find({}).populate('author').exec()
     ctx.body = posts
   } catch (e) {
     ctx.status = 500
@@ -15,7 +15,7 @@ posts.get('/all', auth, async ctx => { // Get all posts even those that aren't y
 
 posts.get('/', auth, async ctx => {
   try {
-    const posts = await Post.find({ author: ctx.request.user._id }).populate('user').exec()
+    const posts = await Post.find({ author: ctx.request.user._id }).populate('author').exec()
     ctx.body = posts
   } catch (e) {
     ctx.status = 500
@@ -25,7 +25,7 @@ posts.get('/', auth, async ctx => {
 
 posts.get('/:id', auth, async ctx => {
   try {
-    const post = await Post.findOne({ _id: ctx.params.id, author: ctx.request.user._id }) // Filter posts gotten according to user
+    const post = await Post.findOne({ _id: ctx.params.id, author: ctx.request.user._id }).populate('author').exec() // Filter posts gotten according to user
     if (!post) {
       ctx.status = 404
       ctx.body = {msg:'emmmmmmm, seems 404'};

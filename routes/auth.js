@@ -18,8 +18,8 @@ auth.post('/signup', async ctx => {
 auth.post('/login', async ctx => {
   try {
     let user = await User.checkCredentials(ctx.request.body.email, ctx.request.body.password)
-    let token = user.generateToken()
-    let refreshToken = user.refreshToken()
+    let token = await user.generateToken()
+    let refreshToken = await user.refreshToken()
     ctx.body = { user, token, refreshToken }
   } catch (err) {
     ctx.status = 400
