@@ -5,7 +5,7 @@ const user = new Router() // How to nest routes
 
 user.get('/', auth, async ctx => {
   try {
-    const profile = ctx.request.user.populate('posts').execPopulate() //Getting all the users posts
+    const profile = ctx.request.user //Getting all the users posts
     ctx.body = profile
   } catch (e) {
     ctx.status = 500

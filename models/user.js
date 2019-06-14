@@ -60,37 +60,6 @@ userSchema.virtual('posts', {
   foreignField: 'author'
 })
 
-
-// Methods are functions on the user constructor, here this === user
-// API token authentication
-userSchema.methods.generateToken = async function () {
-  const user = this
-  // Generate user token and set expiry
-  const token = jwt.sign({ _id: user._id.toString() }, process.env.API_PRIVATE, { expiresInMinutes: process.env.API_LIFETIME })
-  user.tokens = user.tokens.concat({ token }) 
-  await user.save()
-  return token
-}
-
-userSchema.methods.refreshToken = async function () {
-  const user = this
-  // Generate refresh tokens and set expiry (for a mobile kind of use case)
-  // This is used in webapps to always keep the user logged in
-  const refreshToken = jwt.sign({ _id: user._id.toString() }, process.env.API_REFRESH, { expiresInMinutes: process.env.REFRESH_LIFETIME })
-  return refreshToken
-}
-
-// To limit the information spit out when you call a user
-userSchema.methods.toJSON = function () {
-  const user = this
-  const userObject = user.toObject()
-
-  delete userObject.password
-  delete userObject.tokens
-
-  return userObject
-}
-
 // Statics are functions on the user  instance not the user constructor, here this != user
 // Authentication Middleware through custom function 'createCredentials'
 userSchema.statics.checkCredentials = async (email, password) => {
@@ -105,6 +74,36 @@ userSchema.statics.checkCredentials = async (email, password) => {
   return user
 }
 
+
+// Methods are functions on the user constructor, here this === user
+// API token authentication
+userSchema.methods.generateToken = async function () {
+  const user = this
+  // Generate user token and set expiry
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.API_PRIVATE, { expiresIn: process.env.API_LIFETIME })
+  user.tokens = user.tokens.concat({ token }) 
+  await user.save()
+  return token
+}
+
+userSchema.methods.refreshToken = async function () {
+  const user = this
+  // Generate refresh tokens and set expiry (for a mobile kind of use case)
+  // This is used in webapps to always keep the user logged in
+  const refreshToken = jwt.sign({ _id: user._id.toString() }, process.env.API_REFRESH, { expiresIn: process.env.REFRESH_LIFETIME })
+  return refreshToken
+}
+
+// To limit the information spit out when you call a user
+userSchema.methods.toJSON = function () {
+  const user = this
+  const userObject = user.toObject()
+
+  delete userObject.password
+  delete userObject.tokens
+
+  return userObject
+}
 
 // Mongo Hooks
 // Encryption middleware placed before each save

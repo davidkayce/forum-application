@@ -14,8 +14,18 @@ posts.get('/all', auth, async ctx => { // Get all posts even those that aren't y
 })
 
 posts.get('/', auth, async ctx => {
+  // Adding pagination and filtering 
+  const match = {}
+
+  if (ctx.request.query.title) { // (filter by title)
+    match.title = ctx.request.query.title
+  }
+
   try {
-    await ctx.request.user.populate('posts').execPopulate()
+    await ctx.request.user.populate({
+      path: 'tasks',
+      match
+    }).execPopulate()
     ctx.body = ctx.request.user.posts
   } catch (e) {
     ctx.status = 500
