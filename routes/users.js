@@ -5,7 +5,7 @@ const user = new Router() // How to nest routes
 
 user.get('/', auth, async ctx => {
   try {
-    const profile = ctx.request.user.populate('post').execPopulate() //Getting all the users posts
+    const profile = ctx.request.user.populate('posts').execPopulate() //Getting all the users posts
     ctx.body = profile
   } catch (e) {
     ctx.status = 500
@@ -34,12 +34,8 @@ user.patch('/', auth, async ctx => {
 
 user.delete('/', auth, async ctx => {
   try {
-    const user = await User.findByIdAndDelete(ctx.request.params.id)
-    if (!user) {
-      ctx.status = 404
-      ctx.body = 'emmmmm, seems this user does not exist'
-    }
-    ctx.body = user
+    await ctx.request.user.remove()
+    ctx.body = ctx.request.user
   } catch (e) {
     ctx.status = 500
     ctx.body = 'Internal server error'
