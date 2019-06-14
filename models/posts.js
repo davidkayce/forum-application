@@ -8,17 +8,17 @@ const Post = mongoose.model('Post', {
     minlength: 7,
     trim: true
   },
-  author: { 
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
-    required: true,
-  },
   content: {
     type: String,
     required: true,
   }, 
   likes: {
     type: Number
+  },
+  author: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   }
 })
 

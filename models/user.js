@@ -52,28 +52,14 @@ const userSchema = new mongoose.Schema({
   }]
 })
 
-// Encryption middleware placed before each save
-userSchema.pre('save', async function (next) { // we did not use an arrow function hereause we want to access the "this" property
-  const user = this
-  if (user.isModified('password')) { // this checks if the user password property is being changed 
-    user.password = await bcrypt.hash(user.password, 10)
-  }
-  next()
+userSchema.virtual('posts', {
+  ref: 'Post',
+  localField: '_id',
+  foreignField: 'author'
 })
 
-// Authentication Middleware through custom function 'createCredentials'
-userSchema.statics.checkCredentials = async (email, password) => {
-  const user = await User.findOne({ email })
-  if (!user) {
-    throw new Error('This user does not exist')
-  }
-  const isMatch = await bcrypt.compare(password, user.password)
-  if (!isMatch) {
-    throw new Error('The supplied credentials are incorrect')
-  }
-  return user
-}
 
+// Methods are functions on the user constructor, here this === user
 // API token authentication
 userSchema.methods.generateToken = async function () {
   const user = this
@@ -103,6 +89,31 @@ userSchema.methods.toJSON = function () {
   return userObject
 }
 
+// Statics are functions on the user  instance not the user constructor, here this != user
+// Authentication Middleware through custom function 'createCredentials'
+userSchema.statics.checkCredentials = async (email, password) => {
+  const user = await User.findOne({ email })
+  if (!user) {
+    throw new Error('This user does not exist')
+  }
+  const isMatch = await bcrypt.compare(password, user.password)
+  if (!isMatch) {
+    throw new Error('The supplied credentials are incorrect')
+  }
+  return user
+}
+
+
+// Mongo Hooks
+// Encryption middleware placed before each save
+userSchema.pre('save', async function (next) { // we did not use an arrow function hereause we want to access the "this" property
+  const user = this
+  if (user.isModified('password')) { // this checks if the user password property is being changed 
+    user.password = await bcrypt.hash(user.password, 10)
+  }
+  next()
+})
+
 // Delete user posts when user is deleted
 userSchema.pre('remove', async function (next) {
   const user = this
@@ -110,6 +121,6 @@ userSchema.pre('remove', async function (next) {
   next()
 })
 
-const User = mongoose.model('user', userSchema)
+const User = mongoose.model('User', userSchema)
 
 module.exports = User
