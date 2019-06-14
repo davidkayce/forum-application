@@ -3,9 +3,23 @@ const Post = require('../models/posts')
 const auth = require('../middleware/auth')
 const posts = new Router() // How to nest routes
 
-posts.get('/all', auth, async ctx => { // Get all posts even those that aren't yours
+// Get all posts even those that aren't yours
+posts.get('/all', auth, async ctx => { 
+  // Adding pagination and filtering 
+  const match = {}
+
+  if (ctx.request.query.title) { // (filter by title)
+    match.title = ctx.request.query.title
+  }
+
   try {
-    const posts = await Post.find({}).populate('author').execPopulate()
+    const posts = await Post.find({
+      match,
+      options: {
+        limit: parseInt(ctx.request.query.limit) || 15, // Limit of posts to send
+        skip: parseInt(ctx.request.query.skip) || 0 // Skip * number of entries
+      }
+    })
     ctx.body = posts
   } catch (e) {
     ctx.status = 500
@@ -24,7 +38,11 @@ posts.get('/', auth, async ctx => {
   try {
     await ctx.request.user.populate({
       path: 'tasks',
-      match
+      match,
+      options: {
+        limit: parseInt(ctx.request.query.limit) || 10,
+        skip: parseInt(ctx.request.query.skip) || 0 // Skip * number of entries
+      }
     }).execPopulate()
     ctx.body = ctx.request.user.posts
   } catch (e) {
