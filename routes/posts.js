@@ -4,7 +4,7 @@ const auth = require('../middleware/auth')
 const posts = new Router() // How to nest routes
 
 // Get all posts even those that aren't yours
-posts.get('/all', auth, async ctx => { 
+posts.get('/all', async ctx => { 
   // Adding pagination and filtering 
   const match = {}
 
@@ -25,8 +25,7 @@ posts.get('/all', auth, async ctx => {
     })
     ctx.body = posts
   } catch (e) {
-    ctx.status = 500
-    ctx.body = 'Internal server error'
+    ctx.throw(500, 'Internal Server Error')
   }
 })
 
@@ -52,22 +51,17 @@ posts.get('/', auth, async ctx => {
     }).execPopulate()
     ctx.body = ctx.request.user.posts
   } catch (e) {
-    ctx.status = 500
-    ctx.body = 'Internal server error'
+    ctx.throw(500, 'Internal Server Error')
   }
 })
 
 posts.get('/:id', auth, async ctx => {
   try {
     const post = await Post.findOne({ _id: ctx.params.id, author: ctx.request.user._id }) // Filter posts gotten according to user
-    if (!post) {
-      ctx.status = 404
-      ctx.body = {msg:'emmmmmmm, seems 404'};
-    }
+    if (!post) ctx.throw(404, 'This post does not exist')
     ctx.body = post
   } catch (e) {
-    ctx.status = 500
-    ctx.body = 'Internal server error'
+    ctx.throw(500, 'Internal Server Error')
   }
 })
 

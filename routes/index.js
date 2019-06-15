@@ -1,21 +1,22 @@
 const Router = require('koa-router')
-const router = new Router() // Base router
+const router = new Router()
 
+const auth = require('./auth')
 const notes = require('./notes')
 const posts = require('./posts')
-const user = require('./users')
-const auth = require('./auth')
 const upload = require('./uploads')
+const user = require('./users')
 
-
-router.use('/notes', notes.routes()) // How to nest routes
+// How to nest routes
+router.use('/auth', auth.routes())
+router.use('/notes', notes.routes()) 
 router.use('/posts', posts.routes()) 
 router.use('/profile', user.routes()) 
-router.use('/auth', auth.routes())
 router.use('/upload', upload.routes()) 
 
-router.get('*', async ctx => { // Wildcard catcher (this MUST always be the LAST)
+// Wildcard catcher (this MUST always be the LAST)
+router.get('*', async ctx => { 
   ctx.body = 'You have requested a wrong route, please check properly'
 })
 
-module.exports = router // Export routes
+module.exports = router 

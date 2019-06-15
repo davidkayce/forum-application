@@ -26,9 +26,6 @@ const sendDeleteMail  = (email, name) => {
   })
 }
 
-
-
-
 module.exports = {
   sendWelcomeEmail,
   sendLoginMail
