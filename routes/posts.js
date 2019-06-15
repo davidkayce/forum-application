@@ -3,7 +3,7 @@ const Post = require('../models/posts')
 const auth = require('../middleware/auth')
 const posts = new Router()
 
-posts.get('/all', async ctx => { 
+posts.get('/all', auth, async ctx => { 
   const match = {}
   // (filter by title)
   if (ctx.request.query.title) { 

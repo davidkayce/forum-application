@@ -4,18 +4,16 @@ const User = require('../models/user')
 const auth = async (ctx, next) => {
   try {
     const token = ctx.request.header['authorization'].replace('Bearer ', '')
-    const decoded = jwt.verify(token, process.env.API_PRIVATE)
-    const user = await User.findOne({ _id: decoded._id, 'tokens.token': token }) // check for a user with the id in the JWT and the right token
+    const decoded = await jwt.verify(token, process.env.API_PRIVATE)
+    // check for a user with the id in the JWT and the right token
+    const user = await User.findOne({ _id: decoded._id, 'tokens.token': token }) 
 
-    if (!user) {
-      throw new Error()
-    }
+    if (!user) ctx.throw(404, 'These authentication deatils are invalid')
     ctx.request.token = token
-    ctx.request.user = user // storing the verified user object 
-    next() // carry on with the routes
+    ctx.request.user = user 
+    return next() 
   } catch (error) {
-    ctx.status = 401
-    ctx.body = "You are not authorized to access this route"
+    ctx.throw(401, 'You are not authorized to access this route')
   }
 }
 
