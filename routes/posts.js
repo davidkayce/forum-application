@@ -1,14 +1,12 @@
 const Router = require('koa-router')
 const Post = require('../models/posts')
 const auth = require('../middleware/auth')
-const posts = new Router() // How to nest routes
+const posts = new Router()
 
-// Get all posts even those that aren't yours
 posts.get('/all', async ctx => { 
-  // Adding pagination and filtering 
   const match = {}
-
-  if (ctx.request.query.title) { // (filter by title)
+  // (filter by title)
+  if (ctx.request.query.title) { 
     match.title = ctx.request.query.title
   }
 
@@ -16,24 +14,25 @@ posts.get('/all', async ctx => {
     const posts = await Post.find({
       match,
       options: {
-        limit: parseInt(ctx.request.query.limit) || 15, // Limit of posts to send
-        skip: parseInt(ctx.request.query.skip) || 0, // Skip * number of entries
+        // Limit of posts to send
+        limit: parseInt(ctx.request.query.limit) || 15, 
+        // Skip * number of entries
+        skip: parseInt(ctx.request.query.skip) || 0, 
         sort: {
-          createdAt: -1 // descending ie newest first
+          // descending ie newest first
+          createdAt: -1 
         }
       }
     })
-    ctx.body = posts
+    ctx.body = { status: 'success', posts }
   } catch (e) {
     ctx.throw(500, 'Internal Server Error')
   }
 })
 
 posts.get('/', auth, async ctx => {
-  // Adding pagination and filtering 
   const match = {}
-
-  if (ctx.request.query.title) { // (filter by title)
+  if (ctx.request.query.title) { 
     match.title = ctx.request.query.title
   }
 
@@ -43,9 +42,9 @@ posts.get('/', auth, async ctx => {
       match,
       options: {
         limit: parseInt(ctx.request.query.limit) || 10,
-        skip: parseInt(ctx.request.query.skip) || 0, // Skip * number of entries
+        skip: parseInt(ctx.request.query.skip) || 0, 
         sort: {
-          createdAt: -1 // descending ie newest first
+          createdAt: -1
         }
       }
     }).execPopulate()
@@ -57,9 +56,9 @@ posts.get('/', auth, async ctx => {
 
 posts.get('/:id', auth, async ctx => {
   try {
-    const post = await Post.findOne({ _id: ctx.params.id, author: ctx.request.user._id }) // Filter posts gotten according to user
+    const post = await Post.findOne({ _id: ctx.params.id, author: ctx.request.user._id }) 
     if (!post) ctx.throw(404, 'This post does not exist')
-    ctx.body = post
+    ctx.body = { status: 'success', post }
   } catch (e) {
     ctx.throw(500, 'Internal Server Error')
   }
@@ -73,51 +72,38 @@ posts.post('/', auth, async ctx => {
   try {
     await post.save()
     ctx.status = 201
-    ctx.body = post
+    ctx.body = { status: 'success', post }
   } catch (e) {
-    ctx.status = 400
-    ctx.body = e
+    ctx.throw(400, e)
   }
 })
 
 posts.patch('/:id', auth, async ctx => {
   const updates = Object.keys(ctx.request.body)
   const allowedUpdates = ['title', 'content']
-  const isValidOperation = updates.every((update) => allowedUpdates.includes(update)) // sets validation rule for what can be edited in a post
+  // sets validation rule for what can be edited in a post
+  const isValidOperation = updates.every((update) => allowedUpdates.includes(update)) 
 
-  if (!isValidOperation) {
-    ctx.status = 400
-    ctx.body = {msg:'Invalid updates'}
-  }
+  if (!isValidOperation) ctx.throw(400, 'Invalid updates')
 
   try {
     const post = await Post.findOne({ _id: ctx.params.id, author: ctx.request.user._id })
-    
-    if (!post) {
-      ctx.status = 404
-      ctx.body = {msg:'emmmmmmm, seems 404'}
-    }
-
+    if (!post) ctx.throw(400, 'Cannot find this post')
     updates.forEach((update) => post[update] = ctx.request.body[update])
     await post.save()
-    ctx.body = post
+    ctx.body = { status: 'success', post }
   } catch (e) {
-    ctx.status = 400
-    ctx.body = e
+    ctx.throw(400, e)
   }
 })
 
 posts.delete('/:id', auth, async ctx => {
   try {
     const post = await Post.findOneAndDelete({ _id: ctx.params.id, author: ctx.request.user._id })
-    if (!post) {
-      ctx.status = 404
-      ctx.body = {msg:'emmmmmmm, seems 404'}
-    }
-    ctx.body = post
+    if (!post) ctx.throw(400, 'Cannot find this post')
+    ctx.body = { status: 'success' }
   } catch (e) {
-    ctx.status = 404
-    ctx.body = {msg:'Internal Server Error'}
+    ctx.throw(500, 'Internal Server Error')
   }
 })
 

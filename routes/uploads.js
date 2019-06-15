@@ -4,32 +4,36 @@ const authn = require('../middleware/auth')
 const multer = require('koa-multer')
 const upload = new Router()
 
-const file = multer({ // To be able to accept file uploads
+// To be able to accept file uploads
+const file = multer({ 
   limits: {
     fileSize: 500000 //500kb
   },
   fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpg|jpeg|doc|docx|png|pdf)$/)) { // Using regex to match file types
+    // Using regex to match file types
+    if (!file.originalname.match(/\.(jpg|jpeg|doc|docx|png|pdf)$/)) { 
       cb(new Error ('File must be either png, jpg, pdf, doc or docx'))
-      cb(undefined, false)
     }
-    cb(undefined, true) // Accept the file
+    // Accept the file
+    cb(undefined, true) 
   }
 }) 
 
 upload.post('/avatar', authn, file.single('avatar'), async ctx => {
-  ctx.request.user.avatar = ctx.request.files.buffer // save to user collection on DB
+  // save to user collection on DB
+  ctx.request.user.avatar = ctx.request.files.buffer 
   await ctx.request.user.save()
   ctx.status = 200
+  ctx.body = { status: 'success' }
 }, (error, ctx, next) => {
-  ctx.status = 400
-  ctx.body = { error: error.message }
+  ctx.throw(400, { error: error.message })
 })
 
 upload.post('/delete-avatar', authn, async ctx => {
-  ctx.request.user.avatar = undefined // delete current 
+  ctx.request.user.avatar = undefined 
   await ctx.request.user.save()
   ctx.status = 200
+  ctx.body = { status: 'success' }
 })
 
 upload.get('/avatar', authn, async ctx => {
