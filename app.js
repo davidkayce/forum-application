@@ -6,8 +6,14 @@ const router = require('./routes') // Import routes folder
 
 const app = new Koa({
   body: {
-    jsonLimit: '10kb', // Sets the json request body limit to 10k
-    multipart: true 
+    jsonLimit: '10kb',
+    multipart: true,
+    urlencoded: true, 
+    hash: 'md5',
+    formidable: {
+      uploadDir: './uploads',
+      maxFileSize: 0.5 * 1024 * 1024 // 500kb
+    }
   },
   compress: { threshold: 2048 }, // Sets the threshold to Gzip responses at 2k (2048 bytes)
   cors: { origin: '*' }, // Set the `Access-Control-Allow-Origin` header to be `*`
