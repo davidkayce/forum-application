@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const Post = require('./posts')
 
-// Create a schema of sort that defines different values and their conditons 
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -18,8 +17,9 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
     lowercase: true,
+    // Here we check if it is an email and throw an error if it is not
     validate(value) {
-      if (!validator.isEmail(value)) { // Here we check if it is an email and throw an error if it is not
+      if (!validator.isEmail(value)) { 
         throw new Error('Email is invalid')
       }
     }
@@ -29,8 +29,9 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 7,
     trim: true,
+    // You can have various checks, here we are validating if the password contains "password"
     validate(value) {
-      if (value.toLowerCase().includes('password')) { // You can have various checks, here we are validating if the password contains "password"
+      if (value.toLowerCase().includes('password')) { 
         throw new Error('Password cannot contain "password"')
       }
     }
@@ -110,9 +111,11 @@ userSchema.methods.toJSON = function () {
 
 // Mongo Hooks
 // Encryption middleware placed before each save
-userSchema.pre('save', async function (next) { // we did not use an arrow function hereause we want to access the "this" property
+// we did not use an arrow function here because we want to access the "this" property
+userSchema.pre('save', async function (next) { 
   const user = this
-  if (user.isModified('password')) { // this checks if the user password property is being changed 
+  // this checks if the user password property is being changed 
+  if (user.isModified('password')) { 
     user.password = await bcrypt.hash(user.password, 10)
   }
   next()

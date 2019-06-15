@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 
-// Create a schema of sort that defines different values and their conditons 
 const postSchema = new mongoose.Schema({
   title: {
     type: String,
