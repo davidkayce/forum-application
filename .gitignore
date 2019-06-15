@@ -17,3 +17,5 @@ benchmarks/graphs
 #VSCode
 .vscode
 
+#env
+.env

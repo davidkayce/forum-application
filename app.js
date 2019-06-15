@@ -6,29 +6,20 @@ const router = require('./routes') // Import routes folder
 
 const app = new Koa({
   body: {
-    jsonLimit: '10kb' // Sets the json request body limit to 10k
+    jsonLimit: '10kb', // Sets the json request body limit to 10k
+    multipart: true 
   },
-  compress: {
-    threshold: 2048 // Sets the threshold to Gzip responses at 2k (2048 bytes)
-  },
-  cors: {
-    origin: '*' // Set the `Access-Control-Allow-Origin` header to be `*`
-  },
-  debug: {
-    name: 'worker' // Set the debug logger name
-  },
+  compress: { threshold: 2048 }, // Sets the threshold to Gzip responses at 2k (2048 bytes)
+  cors: { origin: '*' }, // Set the `Access-Control-Allow-Origin` header to be `*`
+  debug: { name: 'worker' }, // Set the debug logger name
   helmet: {
     noCache: true,  // Sets the `Cache-Control` headers to prevent caching
     frameguard: {
       action: 'deny' // Set the `X-Frame-Options' header to be `DENY`
     }
   },
-  json: {
-    pretty: false // Disables pretty-printing
-  },
-  logger: {
-    format: 'dev' // Use the `dev` format of logging
-  }
+  json: { pretty: false }, // Disables pretty-printing
+  logger: { format: 'dev' } // Use the `dev` format of logging
 })
 
 mongoose.connect(process.env.MONGODB_URI, {
