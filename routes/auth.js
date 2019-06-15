@@ -8,7 +8,7 @@ auth.post('/signup', async ctx => {
   const user = new User(ctx.request.body)
   try {
     await user.save()
-    // emailService.sendWelcomeEmail(user.email, user.username) // Send email
+    emailService.sendWelcomeEmail(user.email, user.username) 
     ctx.status = 201
     ctx.body = { status: 'success', user }
   } catch (e) {
@@ -21,8 +21,7 @@ auth.post('/login', async ctx => {
     let user = await User.checkCredentials(ctx.request.body.email, ctx.request.body.password)
     let token = await user.generateToken()
     let refreshToken = await user.refreshToken()
-    // Send login Email
-    // emailService.sendLoginMail(user.email, user.username) 
+    emailService.sendLoginMail(user.email, user.username) 
     ctx.body = { status: 'success', user, token, refreshToken }
   } catch (err) {
     ctx.throw(400, 'The supplied credentials are invalid')

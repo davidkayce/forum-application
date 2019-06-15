@@ -18,7 +18,6 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.0.0",
     "jsonwebtoken": "^8.5.1",
-    "koa-multer": "^1.0.2",
     "koa-plus": "^1.2.1",
     "koa-router": "^7.4.0",
     "mongoose": "^5.5.15",

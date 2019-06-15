@@ -2,8 +2,8 @@ const Router = require('koa-router')
 const authn = require('../middleware/auth')
 const upload = new Router()
 
+// TODO: Find out how to use koa-body to upload files to mongo
 upload.post('/avatar', authn, async ctx => {
-  console.log(ctx.request.body.files.avatar)
   // ctx.request.user.avatar = ctx.request.body.files.avatar
   // await ctx.request.user.save()
   // ctx.status = 200
