@@ -1,6 +1,7 @@
 const Koa = require('koa-plus')
-const mongoose = require('mongoose')
 require('dotenv').config({ path:'variables.env'})
+require('./db')
+const router = require('./routes') 
 
 const app = new Koa({
   body: {
@@ -13,24 +14,20 @@ const app = new Koa({
       maxFileSize: 0.5 * 1024 * 1024 // 500kb
     }
   },
-  compress: { threshold: 2048 }, // Sets the threshold to Gzip responses at 2k (2048 bytes)
-  cors: { origin: '*' }, // Set the `Access-Control-Allow-Origin` header to be `*`
-  debug: { name: 'worker' }, // Set the debug logger name
+  // Sets the threshold to Gzip responses at 2k (2048 bytes)
+  compress: { threshold: 2048 }, 
+  cors: { origin: '*' }, 
+  debug: { name: 'worker' }, 
   helmet: {
     noCache: true,  // Sets the `Cache-Control` headers to prevent caching
     frameguard: {
       action: 'deny' // Set the `X-Frame-Options' header to be `DENY`
     }
   },
-  json: { pretty: false }, // Disables pretty-printing
-  logger: { format: 'dev' } // Use the `dev` format of logging
+  json: { pretty: false }, 
+  logger: { format: 'dev' }
 })
 
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false })
-  .then(() => console.log('🥁 DB connected'))
-  .catch((err) => console.error(err))
+app.use(router.routes()) 
 
 module.exports = app
