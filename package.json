@@ -4,8 +4,8 @@
   "description": "node backend",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js"
+    "test": "jest --watch",
+    "dev": "nodemon index.js"
   },
   "keywords": [
     "koa",
@@ -24,6 +24,8 @@
     "validator": "^11.0.0"
   },
   "devDependencies": {
-    "nodemon": "^1.19.1"
+    "jest": "^24.8.0",
+    "nodemon": "^1.19.1",
+    "supertest": "^4.0.2"
   }
 }

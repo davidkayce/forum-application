@@ -2,8 +2,6 @@ const Koa = require('koa-plus')
 const mongoose = require('mongoose')
 require('dotenv').config({ path:'variables.env'})
 
-const router = require('./routes') // Import routes folder 
-
 const app = new Koa({
   body: {
     jsonLimit: '10kb',
@@ -35,14 +33,4 @@ mongoose.connect(process.env.MONGODB_URI, {
   .then(() => console.log('🥁 DB connected'))
   .catch((err) => console.error(err))
 
-async function start () {
-  const port = process.env.PORT  // Set appropriate port based on env variables
-
-  app.use(router.routes()) // make use of exported routes in the route folder 
-
-  app.listen ({ port }, () => {
-    console.log(`🚀 Server ready at http://localhost:` + port )
-  })
-}
-
-start() 
+module.exports = app
