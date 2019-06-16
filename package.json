@@ -21,6 +21,7 @@
     "koa-plus": "^1.2.1",
     "koa-router": "^7.4.0",
     "mongoose": "^5.5.15",
+    "socket.io": "^2.2.0",
     "validator": "^11.0.0"
   },
   "devDependencies": {
