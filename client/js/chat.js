@@ -1,6 +1,7 @@
 const socket = io()
 
-const text = document.querySelector('#m').value.trim()
+const text = document.getElementById('m')
+console.log(text.value())
 const button = document.querySelector('#b')
 const messages = document.querySelector('#messages')
 
