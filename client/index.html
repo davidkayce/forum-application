@@ -20,7 +20,7 @@
 <body>
   <ul></ul>
   <form action="" id="form">
-    <input autocomplete="off" />
+    <input autocomplete="off" required/>
     <button id="send">Send</button>
     <button id="location">Location</button>
   </form>
@@ -33,7 +33,6 @@
     e.preventDefault()
     document.querySelector('#send').addEventListener('click', () => {
       let message  = document.querySelector('input')
-      // Send message
       socket.emit('message', message.value)
       message.value = ''
       message.focus()
