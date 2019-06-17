@@ -46,15 +46,16 @@ app.use(async (ctx) => {
 app.use(router.routes()) 
 
 io.on('connection', (socket) => {
+  // On receives events while emit send events, broadcast send events to everyone but the originating client
   console.log('New websocket connection')
 
-  // Broadcast is used to send messages to everyone but themselves
   socket.broadcast.emit('message', 'ME a new user just joined')
 
-  // Hooks on socket instance (the client)
-  // 'on' receives events while 'emit' sends events
+  socket.on('location', (coords) => {
+    io.emit('message', `https://google.com/maps?q=${coords.latitude},${coords.longitude}`)
+  })
+
   socket.on('message', (message) => {
-    // Emit to all connections
     io.emit('message', message)
   })
 
