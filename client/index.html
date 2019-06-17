@@ -16,15 +16,31 @@
     #messages li:nth-child(odd) { background: #eee; }
   </style>
 </head>
-
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/chat.js"></script>
 
 <body>
-  <ul id="messages"></ul>
-  <form action="">
-    <input id="m" autocomplete="off" />
+  <ul></ul>
+  <form action="" id="form">
+    <input autocomplete="off" />
     <button id="b">Send</button>
   </form>
 </body>
+
+<script>
+  const socket = io()
+
+  document.querySelector('#form').addEventListener('submit', (e) => {
+    e.preventDefault()
+    let message  = document.querySelector('input').value
+    // Send message
+    socket.emit('message', message)
+    document.querySelector('input').value = ''
+  })
+
+  socket.on('message', (message) => {
+    let list = document.createElement('li');
+    list.textContent = message
+    document.querySelector('ul').appendChild(list)
+  })
+</script>
 </html>

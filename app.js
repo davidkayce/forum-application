@@ -48,8 +48,19 @@ app.use(router.routes())
 io.on('connection', (socket) => {
   console.log('New websocket connection')
 
+  // Broadcast is used to send messages to everyone but themselves
+  socket.broadcast.emit('message', 'ME a new user just joined')
+
+  // Hooks on socket instance (the client)
+  // 'on' receives events while 'emit' sends events
+  socket.on('message', (message) => {
+    // Emit to all connections
+    io.emit('message', message)
+  })
+
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log('client disconnected')
+    io.emit('message', 'A user has left')
   })
 })
 
