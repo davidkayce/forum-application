@@ -35,11 +35,14 @@ auth.post('/refresh', async ctx => {
     // check for a user with the id in the JWT and the right token
     const user = await User.findOne({ _id: decoded._id, 'tokens.token': token }) 
     if (!user) ctx.throw(400, 'This user does not exist')
-
-    let newToken = user.generateToken()
-    ctx.body = newToken
+    let token = await user.generateToken()
+    let refreshToken = await user.refreshToken()
+    ctx.body = { status: 'success', token, refreshToken }
   } catch (err) {
-    ctx.throw(400, 'The supplied credentials are invalid')
+    // log all users out if a refresh token is invalid to cater for stolen refresh tokens
+    ctx.request.user.tokens = [] 
+    await ctx.request.user.save() 
+    ctx.throw(400, 'Invalid')
   }
 })
 
